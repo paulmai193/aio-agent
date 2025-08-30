@@ -10,7 +10,19 @@
 - Hỗ trợ nhiều loại agent (chat, code, ...)
 - Docker support
 
-## Cài đặt
+## Quick Start
+
+### Với Docker Compose (Khuyến nghị)
+
+```bash
+git clone <repo-url>
+cd AI
+docker-compose up -d
+```
+
+Trực tiếp truy cập: http://localhost:8000
+
+### Với Python (Development)
 
 1. Clone repository:
 ```bash
@@ -34,7 +46,34 @@ cp .env.example .env
 python main.py
 ```
 
-## Docker
+## Docker Compose (Khuyến nghị)
+
+1. Chạy toàn bộ stack (Agent Orchestrator + Ollama):
+```bash
+docker-compose up -d
+```
+
+2. Xem logs:
+```bash
+docker-compose logs -f
+```
+
+3. Dừng services:
+```bash
+docker-compose down
+```
+
+4. Xóa volumes (reset data):
+```bash
+docker-compose down -v
+```
+
+### Services bao gồm:
+- **agent-orchestrator**: FastAPI app (port 8000)
+- **ollama**: Ollama server (port 11434)
+- **ollama_data**: Persistent volume cho models
+
+## Docker (Manual)
 
 ```bash
 docker build -t agent-orchestrator .
@@ -70,4 +109,39 @@ app/
     ├── base.py          # Base agent class
     ├── chat_agent.py    # Chat agent
     └── code_agent.py    # Code agent
+```
+## Ollama Models Setup
+
+Sau khi chạy docker-compose, cài đặt models:
+
+### Tự động (Khuyến nghị)
+```bash
+# Linux/Mac
+./setup-models.sh
+
+# Windows
+setup-models.bat
+```
+
+### Thủ công
+```bash
+# Pull models cần thiết
+docker-compose exec ollama ollama pull llama2
+docker-compose exec ollama ollama pull codellama
+
+# Kiểm tra models đã cài
+docker-compose exec ollama ollama list
+```
+
+## Testing
+
+```bash
+# Test tất cả agents
+python test_agents_integration.py
+
+# Test API endpoints
+curl http://localhost:8000/api/v1/health
+curl -X POST http://localhost:8000/api/v1/chat \
+  -H "Content-Type: application/json" \
+  -d '{"agent_type": "chat", "message": "Hello"}'
 ```
