@@ -4,7 +4,11 @@ Quản lý và điều phối các agent.
 import logging
 from typing import Dict, List, Optional
 
-from agents import BaseAgent, ChatAgent, CodeAgent
+from agents import (BaseAgent, ChatAgent, CodeAgent, AiEngineerAgent, 
+                    UiDesignerAgent, ContentCreatorAgent, BackendArchitectAgent,
+                    FrontendDeveloperAgent, RapidPrototyperAgent, GrowthHackerAgent,
+                    TrendResearcherAgent, DevopsAutomatorAgent, TestWriterFixerAgent,
+                    ProjectShipperAgent)
 from core.ollama_client import OllamaClient
 from core.schemas import AgentRequest, AgentResponse
 
@@ -27,8 +31,20 @@ class AgentManager:
         # Khởi tạo các agent có sẵn
         self.agents["chat"] = ChatAgent(self.ollama_client)
         self.agents["code"] = CodeAgent(self.ollama_client)
+        self.agents["aiengineer"] = AiEngineerAgent(self.ollama_client)
+        self.agents["uidesigner"] = UiDesignerAgent(self.ollama_client)
+        self.agents["contentcreator"] = ContentCreatorAgent(self.ollama_client)
+        self.agents["backendarchitect"] = BackendArchitectAgent(self.ollama_client)
+        self.agents["frontenddeveloper"] = FrontendDeveloperAgent(self.ollama_client)
+        self.agents["rapidprototyper"] = RapidPrototyperAgent(self.ollama_client)
+        self.agents["growthhacker"] = GrowthHackerAgent(self.ollama_client)
+        self.agents["trendresearcher"] = TrendResearcherAgent(self.ollama_client)
+        self.agents["devopsautomator"] = DevopsAutomatorAgent(self.ollama_client)
+        self.agents["testwriterfixer"] = TestWriterFixerAgent(self.ollama_client)
+        self.agents["projectshipper"] = ProjectShipperAgent(self.ollama_client)
         
         logger.info(f"Đã khởi tạo {len(self.agents)} agents: {list(self.agents.keys())}")
+        logger.info("Agents có sẵn: chat, code, aiengineer, uidesigner, contentcreator, backendarchitect, frontenddeveloper, rapidprototyper, growthhacker, trendresearcher, devopsautomator, testwriterfixer, projectshipper")
     
     async def process_request(self, request: AgentRequest) -> AgentResponse:
         """Xử lý request và route đến agent phù hợp."""
