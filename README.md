@@ -15,7 +15,7 @@ Truy cập: http://localhost:8000
 
 ## 🎯 Tính năng
 
-- **13 chuyên gia AI agents** từ Contains Studio repository
+- **11 chuyên gia AI agents** từ Contains Studio repository
 - **Kiến trúc modular** dễ mở rộng
 - **Tích hợp Ollama** qua REST API
 - **FastAPI endpoints** với documentation tự động
@@ -45,9 +45,7 @@ Truy cập: http://localhost:8000
 ### Project Management (1 agent)
 - `projectshipper` - Launch coordination, risk mitigation, delivery
 
-### Core (2 agents)
-- `chat` - General assistant
-- `code` - Programming specialist
+
 
 ## 🔧 Development Setup
 
@@ -60,11 +58,20 @@ python main.py
 
 ## 📡 API Usage
 
+### Smart Processing (Recommended)
+```bash
+# Let AI choose agents automatically
+curl -X POST http://localhost:8000/api/v1/process \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Build a social media app with AI features and deploy it"}'
+```
+
+### Manual Agent Selection
 ```bash
 # Health check
 curl http://localhost:8000/api/v1/health
 
-# Chat with agent
+# Chat with specific agent
 curl -X POST http://localhost:8000/api/v1/chat \
   -H "Content-Type: application/json" \
   -d '{"agent_type": "aiengineer", "message": "Integrate AI chatbot into web app"}'

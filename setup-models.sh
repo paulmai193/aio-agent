@@ -18,6 +18,9 @@ docker-compose exec ollama ollama pull llama2
 echo "Pulling codellama model..."
 docker-compose exec ollama ollama pull codellama
 
+echo "Pulling deepseek-r1:1.5b model..."
+docker-compose exec ollama ollama pull deepseek-r1:1.5b
+
 # Verify installation
 echo "Verifying installed models..."
 docker-compose exec ollama ollama list

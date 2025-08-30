@@ -4,11 +4,10 @@ Quản lý và điều phối các agent.
 import logging
 from typing import Dict, List, Optional
 
-from agents import (BaseAgent, ChatAgent, CodeAgent, AiEngineerAgent, 
-                    UiDesignerAgent, ContentCreatorAgent, BackendArchitectAgent,
-                    FrontendDeveloperAgent, RapidPrototyperAgent, GrowthHackerAgent,
-                    TrendResearcherAgent, DevopsAutomatorAgent, TestWriterFixerAgent,
-                    ProjectShipperAgent)
+from agents import (BaseAgent, AiEngineerAgent, UiDesignerAgent, ContentCreatorAgent, 
+                    BackendArchitectAgent, FrontendDeveloperAgent, RapidPrototyperAgent, 
+                    GrowthHackerAgent, TrendResearcherAgent, DevopsAutomatorAgent, 
+                    TestWriterFixerAgent, ProjectShipperAgent)
 from core.ollama_client import OllamaClient
 from core.schemas import AgentRequest, AgentResponse
 
@@ -22,7 +21,7 @@ class AgentManager:
     def __init__(self):
         self.ollama_client = OllamaClient()
         self.agents: Dict[str, BaseAgent] = {}
-        self.default_agent_type = "chat"
+        self.default_agent_type = "aiengineer"
     
     async def initialize(self):
         """Khởi tạo các agent."""
@@ -30,12 +29,12 @@ class AgentManager:
         
         # Khởi tạo các agent có sẵn
         agents_to_init = [
-            ("chat", ChatAgent), ("code", CodeAgent), ("aiengineer", AiEngineerAgent),
-            ("uidesigner", UiDesignerAgent), ("contentcreator", ContentCreatorAgent),
-            ("backendarchitect", BackendArchitectAgent), ("frontenddeveloper", FrontendDeveloperAgent),
-            ("rapidprototyper", RapidPrototyperAgent), ("growthhacker", GrowthHackerAgent),
-            ("trendresearcher", TrendResearcherAgent), ("devopsautomator", DevopsAutomatorAgent),
-            ("testwriterfixer", TestWriterFixerAgent), ("projectshipper", ProjectShipperAgent)
+            ("aiengineer", AiEngineerAgent), ("uidesigner", UiDesignerAgent), 
+            ("contentcreator", ContentCreatorAgent), ("backendarchitect", BackendArchitectAgent), 
+            ("frontenddeveloper", FrontendDeveloperAgent), ("rapidprototyper", RapidPrototyperAgent), 
+            ("growthhacker", GrowthHackerAgent), ("trendresearcher", TrendResearcherAgent), 
+            ("devopsautomator", DevopsAutomatorAgent), ("testwriterfixer", TestWriterFixerAgent), 
+            ("projectshipper", ProjectShipperAgent)
         ]
         
         for agent_name, agent_class in agents_to_init:

@@ -4,9 +4,7 @@ Danh sách tất cả agents có sẵn trong hệ thống (system prompts đư�
 
 ## Engineering Agents
 
-- **chat** - ChatAgent: Trợ lý AI chung, trả lời câu hỏi thông thường
-- **code** - CodeAgent: Chuyên gia lập trình, debug, review code
-- **aiengineer** - AiEngineerAgent: Expert AI engineer - LLM integration, ML pipelines, computer vision
+- **aiengineer** - AiEngineerAgent: Expert AI engineer - LLM integration, ML pipelines, computer vision, general programming
 - **backendarchitect** - BackendArchitectAgent: Master backend architect - scalable APIs, databases, microservices
 - **frontenddeveloper** - FrontendDeveloperAgent: Elite frontend specialist - React/Vue, responsive design, performance
 - **rapidprototyper** - RapidPrototyperAgent: Rapid prototyping specialist - MVP development, fast iteration
@@ -70,6 +68,7 @@ Danh sách tất cả agents có sẵn trong hệ thống (system prompts đư�
 
 - **Engineering agents**: `codellama` - Tối ưu cho code
 - **Other agents**: `llama2` - Tối ưu cho text chung
+- **Task Orchestrator**: `deepseek-r1:1.5b` - Tối ưu cho reasoning và task analysis (compact version)
 
 ## System Prompts
 

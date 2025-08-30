@@ -2,8 +2,6 @@
 Agents module initialization.
 """
 from .base import BaseAgent
-from .chat_agent import ChatAgent
-from .code_agent import CodeAgent
 from .ai_engineer_agent import AiEngineerAgent
 from .ui_designer_agent import UiDesignerAgent
 from .content_creator_agent import ContentCreatorAgent
@@ -17,9 +15,8 @@ from .test_writer_fixer_agent import TestWriterFixerAgent
 from .project_shipper_agent import ProjectShipperAgent
 
 __all__ = [
-    "BaseAgent", "ChatAgent", "CodeAgent", "AiEngineerAgent", 
-    "UiDesignerAgent", "ContentCreatorAgent", "BackendArchitectAgent",
-    "FrontendDeveloperAgent", "RapidPrototyperAgent", "GrowthHackerAgent",
-    "TrendResearcherAgent", "DevopsAutomatorAgent", "TestWriterFixerAgent",
-    "ProjectShipperAgent"
+    "BaseAgent", "AiEngineerAgent", "UiDesignerAgent", "ContentCreatorAgent", 
+    "BackendArchitectAgent", "FrontendDeveloperAgent", "RapidPrototyperAgent", 
+    "GrowthHackerAgent", "TrendResearcherAgent", "DevopsAutomatorAgent", 
+    "TestWriterFixerAgent", "ProjectShipperAgent"
 ]

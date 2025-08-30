@@ -128,6 +128,7 @@ setup-models.bat
 # Pull models cần thiết
 docker-compose exec ollama ollama pull llama2
 docker-compose exec ollama ollama pull codellama
+docker-compose exec ollama ollama pull deepseek-r1:1.5b
 
 # Kiểm tra models đã cài
 docker-compose exec ollama ollama list
