@@ -15,16 +15,20 @@ from router.api import router
 async def lifespan(app: FastAPI):
     """Quản lý lifecycle của ứng dụng."""
     # Startup
+    logging.info("Starting Agent Orchestrator application...")
     logging.info("Khởi tạo Agent Manager...")
     agent_manager = AgentManager()
     await agent_manager.initialize()
     app.state.agent_manager = agent_manager
+    logging.info("Application startup completed")
     
     yield
     
     # Shutdown
+    logging.info("Shutting down Agent Orchestrator application...")
     logging.info("Đóng Agent Manager...")
     await agent_manager.cleanup()
+    logging.info("Application shutdown completed")
 
 
 def create_app() -> FastAPI:
@@ -45,9 +49,11 @@ app = create_app()
 
 if __name__ == "__main__":
     import uvicorn
+    logging.info(f"Starting server on {settings.HOST}:{settings.PORT}")
     uvicorn.run(
         "main:app",
         host=settings.HOST,
         port=settings.PORT,
-        reload=settings.DEBUG
+        reload=settings.DEBUG,
+        log_level="info"
     )

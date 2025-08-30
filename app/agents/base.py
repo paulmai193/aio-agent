@@ -1,11 +1,14 @@
 """
 Base class cho tất cả các agent.
 """
+import logging
 from abc import ABC, abstractmethod
 from typing import Dict, Any, Optional
 
 from core.ollama_client import OllamaClient
 from core.schemas import AgentRequest, AgentResponse, OllamaRequest
+
+logger = logging.getLogger(__name__)
 
 
 class BaseAgent(ABC):
@@ -32,6 +35,7 @@ class BaseAgent(ABC):
     
     async def call_ollama(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
         """Gọi Ollama với prompt."""
+        logger.debug(f"Agent {self.agent_type} calling Ollama with model: {self.get_model_name()}")
         system_prompt = self.get_system_prompt()
         full_prompt = f"{system_prompt}\n\nUser: {prompt}"
         
@@ -41,6 +45,7 @@ class BaseAgent(ABC):
         )
         
         response = await self.ollama_client.generate(ollama_request)
+        logger.debug(f"Agent {self.agent_type} received response from Ollama")
         return response.response
     
     def can_handle(self, request: AgentRequest) -> bool:

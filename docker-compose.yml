@@ -20,6 +20,7 @@ services:
       - ollama_data:/root/.ollama
     environment:
       - OLLAMA_ORIGINS=*
+      - OLLAMA_DEBUG=1
 
 volumes:
   ollama_data:
