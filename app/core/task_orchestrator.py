@@ -63,18 +63,22 @@ Example response format:
   {
     "task_description": "Clear description of what needs to be done",
     "agent_type": "most_suitable_agent",
-    "agent_type": "most_suitable_agent", 
     "priority": 1,
     "dependencies": []
   }
 ]
 
 Priority: 1 (highest) to 5 (lowest)
-Dependencies: Array of task indices that must complete first (empty if no dependencies)"""
+Dependencies: Array of task indices (0-based) that must complete first. Use dependencies when:
+- Task needs output/results from previous tasks as input
+- Task builds upon work done by another task
+- Sequential workflow is required
+
+The system will automatically pass outputs from dependency tasks as context to dependent tasks."""
     
     def get_model_name(self) -> str:
         """Lấy tên model Ollama sử dụng."""
-        return "deepseek-r1:1.5b"
+        return "llama2"
     
     async def analyze_and_split_request(self, user_request: str) -> List[Dict[str, Any]]:
         """Phân tích request và chia thành các tasks với agent phù hợp."""
@@ -104,7 +108,9 @@ Dependencies: Array of task indices that must complete first (empty if no depend
             tasks = json.loads(json_str)
             logger.info(f"Analyzed request into {len(tasks)} tasks")
             
-            return tasks
+            # Validate and fix task dependencies
+            validated_tasks = self._validate_dependencies(tasks)
+            return validated_tasks
             
         except (json.JSONDecodeError, Exception) as e:
             logger.error(f"Error analyzing request: {e}, response: {response[:200] if 'response' in locals() else 'No response'}")
@@ -115,3 +121,17 @@ Dependencies: Array of task indices that must complete first (empty if no depend
                 "priority": 1,
                 "dependencies": []
             }]
+    
+    def _validate_dependencies(self, tasks: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Validate and fix task dependencies."""
+        for i, task in enumerate(tasks):
+            dependencies = task.get('dependencies', [])
+            # Remove invalid dependencies (self-reference, out of range)
+            valid_deps = [dep for dep in dependencies if isinstance(dep, int) and 0 <= dep < len(tasks) and dep != i]
+            task['dependencies'] = valid_deps
+            
+            # Ensure required fields exist
+            task.setdefault('priority', 3)
+            task.setdefault('agent_type', 'aiengineer')
+        
+        return tasks
