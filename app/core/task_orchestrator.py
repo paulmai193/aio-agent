@@ -55,7 +55,7 @@ Available agents and their capabilities:
 
 Analyze the user request and break it down into specific tasks. For each task, select the most appropriate agent.
 
-Return a JSON array of tasks in this format with out any explanation.
+Return a JSON array of tasks in this format with out any explanation or extra text.
 IMPORTANT: You must respond with a valid JSON array only, no other text. The response must be parseable by json.loads().
 
 Example response format:
