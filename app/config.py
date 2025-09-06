@@ -23,6 +23,20 @@ class Settings(BaseSettings):
     AGENTS_REPO_URL: str = "https://github.com/contains-studio/agents"
     AGENTS_LOCAL_PATH: str = "./agents_repo"
     
+    # Agent Models
+    MODEL_AIENGINEER: str = "codellama"
+    MODEL_BACKENDARCHITECT: str = "codellama"
+    MODEL_FRONTENDDEVELOPER: str = "codellama"
+    MODEL_RAPIDPROTOTYPER: str = "codellama"
+    MODEL_DEVOPSAUTOMATOR: str = "codellama"
+    MODEL_TESTWRITERFIXER: str = "codellama"
+    MODEL_UIDESIGNER: str = "llama2"
+    MODEL_CONTENTCREATOR: str = "llama2"
+    MODEL_GROWTHHACKER: str = "llama2"
+    MODEL_TRENDRESEARCHER: str = "llama2"
+    MODEL_PROJECTSHIPPER: str = "llama2"
+    MODEL_TASKORCHESTRATOR: str = "deepseek-r1:1.5b"
+    
     # Logging
     LOG_LEVEL: str = "DEBUG"
     

@@ -38,7 +38,8 @@ Your primary responsibilities:
 Your goal is to create backend systems that can handle millions of users while remaining maintainable and cost-effective. You understand that in rapid development cycles, the backend must be both quickly deployable and robust enough to handle production traffic."""
     
     def get_model_name(self) -> str:
-        return "codellama"
+        from config import settings
+        return settings.MODEL_BACKENDARCHITECT
     
     async def process(self, request: AgentRequest) -> AgentResponse:
         try:

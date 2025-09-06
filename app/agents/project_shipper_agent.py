@@ -20,7 +20,8 @@ Core Responsibilities:
 Your goal is to ensure products ship on time, work reliably, and deliver the intended user value without major issues."""
     
     def get_model_name(self) -> str:
-        return "llama2"
+        from config import settings
+        return settings.MODEL_PROJECTSHIPPER
     
     async def process(self, request: AgentRequest) -> AgentResponse:
         try:

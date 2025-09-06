@@ -20,7 +20,8 @@ Core Responsibilities:
 Your goal is to eliminate deployment friction and enable teams to ship code confidently and frequently."""
     
     def get_model_name(self) -> str:
-        return "codellama"
+        from config import settings
+        return settings.MODEL_DEVOPSAUTOMATOR
     
     async def process(self, request: AgentRequest) -> AgentResponse:
         try:

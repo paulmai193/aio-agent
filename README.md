@@ -4,11 +4,34 @@ Python application điều phối các agent từ [Contains Studio Agents](https
 
 ## 🚀 Quick Start
 
+### Development
 ```bash
+# Linux/Mac
 git clone <repo-url>
 cd AI
-docker-compose up -d
-./setup-models.sh  # hoặc setup-models.bat trên Windows
+docker-compose -f docker-compose.dev.yml up -d
+./setup-models-dev.sh
+
+# Windows
+git clone <repo-url>
+cd AI
+docker-compose -f docker-compose.dev.yml up -d
+setup-models-dev.bat
+```
+
+### Production
+```bash
+# Linux/Mac
+git clone <repo-url>
+cd AI
+docker-compose -f docker-compose.prod.yml up -d
+./setup-models-prod.sh
+
+# Windows
+git clone <repo-url>
+cd AI
+docker-compose -f docker-compose.prod.yml up -d
+setup-models-prod.bat
 ```
 
 Truy cập: http://localhost:8000
@@ -47,12 +70,55 @@ Truy cập: http://localhost:8000
 
 
 
-## 🔧 Development Setup
+## 🔧 Build & Development
 
+### Environment Profiles
+
+#### Development Environment
+- **Models**: Lightweight (7b versions)
+- **Features**: Hot reload, debug logging, volume mounts
+- **Resources**: Lower memory usage
+
+```bash
+# Start development environment
+docker-compose -f docker-compose.dev.yml up -d
+
+# Setup lightweight models
+./setup-models-dev.sh      # Linux/Mac
+setup-models-dev.bat        # Windows
+
+# View logs
+docker-compose -f docker-compose.dev.yml logs -f
+
+# Stop
+docker-compose -f docker-compose.dev.yml down
+```
+
+#### Production Environment
+- **Models**: Full-size (13b versions)
+- **Features**: Security hardening, health checks, 4 workers
+- **Resources**: Optimized for performance
+
+```bash
+# Start production environment
+docker-compose -f docker-compose.prod.yml up -d
+
+# Setup production models
+./setup-models-prod.sh      # Linux/Mac
+setup-models-prod.bat       # Windows
+
+# View logs
+docker-compose -f docker-compose.prod.yml logs -f
+
+# Stop
+docker-compose -f docker-compose.prod.yml down
+```
+
+#### Local Development (Python)
 ```bash
 cd app
 pip install -r requirements.txt
-cp .env.example .env
+cp .env.dev .env  # or .env.prod
 python main.py
 ```
 
@@ -103,31 +169,103 @@ app/
 3. Choose appropriate model (`codellama` for engineering, `llama2` for others)
 4. Register in `AgentManager.initialize()`
 
-## 📊 Models Used
+## 📊 Models Configuration
 
-- **Engineering agents**: `codellama` - Optimized for code
-- **Other agents**: `llama2` - Optimized for general text
+### Development Models (Lightweight)
+- **Engineering agents**: `codellama:7b`
+- **Content agents**: `llama2:7b`
+- **Task Orchestrator**: `deepseek-r1:1.5b`
 
-## 🐳 Docker Commands
+### Production Models (Full Performance)
+- **Engineering agents**: `codellama:13b`
+- **Content agents**: `llama2:13b`
+- **Task Orchestrator**: `deepseek-r1:7b`
 
+### Model Assignment
+- **Engineering**: aiengineer, backendarchitect, frontenddeveloper, rapidprototyper, devopsautomator, testwriterfixer
+- **Content**: uidesigner, contentcreator, growthhacker, trendresearcher, projectshipper
+- **Orchestration**: taskorchestrator
+
+## 🐳 Docker Management
+
+### Development Commands
 ```bash
-# Start services
-docker-compose up -d
+# Build and start
+docker-compose -f docker-compose.dev.yml up --build -d
+
+# Rebuild specific service
+docker-compose -f docker-compose.dev.yml build agent-orchestrator
 
 # View logs
-docker-compose logs -f
+docker-compose -f docker-compose.dev.yml logs -f agent-orchestrator
 
-# Stop services
-docker-compose down
-
-# Reset data
-docker-compose down -v
+# Reset development data
+docker-compose -f docker-compose.dev.yml down -v
 ```
 
-## 🧪 Testing
-
+### Production Commands
 ```bash
+# Deploy production
+docker-compose -f docker-compose.prod.yml up --build -d
+
+# Scale workers
+docker-compose -f docker-compose.prod.yml up --scale agent-orchestrator=3 -d
+
+# Health check
+docker-compose -f docker-compose.prod.yml exec agent-orchestrator curl http://localhost:8000/api/v1/health
+
+# Production logs
+docker-compose -f docker-compose.prod.yml logs --tail=100 -f
+```
+
+### Model Management
+```bash
+# List installed models
+docker-compose exec ollama ollama list
+
+# Remove unused models
+docker-compose exec ollama ollama rm <model-name>
+
+# Pull specific model
+docker-compose exec ollama ollama pull llama2:13b
+```
+
+## 🧪 Testing & Monitoring
+
+### Integration Testing
+```bash
+# Test all agents
 python test_agents_integration.py
+
+# Test specific environment
+ENV=dev python test_agents_integration.py
+ENV=prod python test_agents_integration.py
+```
+
+### Health Monitoring
+```bash
+# Application health
+curl http://localhost:8000/api/v1/health
+
+# Ollama health
+curl http://localhost:11434/api/tags
+
+# Container health
+docker-compose ps
+docker-compose top
+```
+
+### Performance Testing
+```bash
+# Load test orchestrator
+curl -X POST http://localhost:8000/api/v1/process \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Create a simple web app"}'
+
+# Benchmark specific agent
+time curl -X POST http://localhost:8000/api/v1/chat \
+  -H "Content-Type: application/json" \
+  -d '{"agent_type": "aiengineer", "message": "Hello"}'
 ```
 
 ## 📄 License

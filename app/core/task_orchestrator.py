@@ -78,7 +78,12 @@ The system will automatically pass outputs from dependency tasks as context to d
     
     def get_model_name(self) -> str:
         """Lấy tên model Ollama sử dụng."""
+<<<<<<< HEAD
         return "llama2"
+=======
+        from config import settings
+        return settings.MODEL_TASKORCHESTRATOR
+>>>>>>> profile-optimize
     
     async def analyze_and_split_request(self, user_request: str) -> List[Dict[str, Any]]:
         """Phân tích request và chia thành các tasks với agent phù hợp."""

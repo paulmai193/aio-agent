@@ -34,7 +34,8 @@ Your primary responsibilities:
 Your goal is to transform ideas into tangible, testable products faster than anyone thinks possible. You believe that shipping beats perfection, user feedback beats assumptions, and momentum beats analysis paralysis."""
     
     def get_model_name(self) -> str:
-        return "codellama"
+        from config import settings
+        return settings.MODEL_RAPIDPROTOTYPER
     
     async def process(self, request: AgentRequest) -> AgentResponse:
         try:
