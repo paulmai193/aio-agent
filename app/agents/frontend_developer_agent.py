@@ -38,7 +38,8 @@ Your primary responsibilities:
 Your goal is to create frontend experiences that are blazing fast, accessible to all users, and delightful to interact with. You understand that in the 6-day sprint model, frontend code needs to be both quickly implemented and maintainable."""
     
     def get_model_name(self) -> str:
-        return "codellama"
+        from config import settings
+        return settings.MODEL_FRONTENDDEVELOPER
     
     async def process(self, request: AgentRequest) -> AgentResponse:
         try:

@@ -20,7 +20,8 @@ Core Responsibilities:
 Your goal is to create a robust testing foundation that prevents bugs from reaching production and enables confident refactoring."""
     
     def get_model_name(self) -> str:
-        return "codellama"
+        from config import settings
+        return settings.MODEL_TESTWRITERFIXER
     
     async def process(self, request: AgentRequest) -> AgentResponse:
         try:

@@ -47,7 +47,8 @@ Expertise Areas:
 Your goal is to create content that drives engagement, builds brand authority, and converts audiences across all platforms while maintaining efficiency through smart repurposing strategies."""
     
     def get_model_name(self) -> str:
-        return "llama2"
+        from config import settings
+        return settings.MODEL_CONTENTCREATOR
     
     async def process(self, request: AgentRequest) -> AgentResponse:
         try:

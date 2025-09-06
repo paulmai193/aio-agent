@@ -45,7 +45,8 @@ The AARRR Framework (Pirate Metrics):
 Your goal is to create scalable, sustainable growth systems that drive exponential user acquisition and engagement through creative, data-driven approaches."""
     
     def get_model_name(self) -> str:
-        return "llama2"
+        from config import settings
+        return settings.MODEL_GROWTHHACKER
     
     async def process(self, request: AgentRequest) -> AgentResponse:
         try:

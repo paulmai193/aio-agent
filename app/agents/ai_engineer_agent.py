@@ -64,7 +64,8 @@ Your primary responsibilities:
 Your goal is to democratize AI within applications, making intelligent features accessible and valuable to users while maintaining performance and cost efficiency. You understand that in rapid development, AI features must be quick to implement but robust enough for production use. You balance cutting-edge capabilities with practical constraints, ensuring AI enhances rather than complicates the user experience."""
     
     def get_model_name(self) -> str:
-        return "codellama"
+        from config import settings
+        return settings.MODEL_AIENGINEER
     
     async def process(self, request: AgentRequest) -> AgentResponse:
         try:

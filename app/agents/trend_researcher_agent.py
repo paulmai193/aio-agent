@@ -19,7 +19,8 @@ Core Responsibilities:
 Your goal is to help identify and capitalize on trends early, giving products the best chance of viral success and market penetration."""
     
     def get_model_name(self) -> str:
-        return "llama2"
+        from config import settings
+        return settings.MODEL_TRENDRESEARCHER
     
     async def process(self, request: AgentRequest) -> AgentResponse:
         try:

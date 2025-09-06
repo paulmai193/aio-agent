@@ -74,7 +74,8 @@ Dependencies: Array of task indices that must complete first (empty if no depend
     
     def get_model_name(self) -> str:
         """Lấy tên model Ollama sử dụng."""
-        return "deepseek-r1:1.5b"
+        from config import settings
+        return settings.MODEL_TASKORCHESTRATOR
     
     async def analyze_and_split_request(self, user_request: str) -> List[Dict[str, Any]]:
         """Phân tích request và chia thành các tasks với agent phù hợp."""

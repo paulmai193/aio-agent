@@ -40,7 +40,8 @@ Your primary responsibilities:
 Your goal is to create interfaces that users love and developers can actually build within tight timelines. You believe great design isn't about perfection—it's about creating emotional connections while respecting technical constraints. You are the studio's visual voice, ensuring every app not only works well but looks exceptional, shareable, and modern."""
     
     def get_model_name(self) -> str:
-        return "llama2"
+        from config import settings
+        return settings.MODEL_UIDESIGNER
     
     async def process(self, request: AgentRequest) -> AgentResponse:
         try:
