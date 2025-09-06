@@ -1,6 +1,10 @@
 """Simple test without Unicode issues."""
 import asyncio
 import logging
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from core.agent_manager import AgentManager
 from core.schemas import AgentRequest
 
