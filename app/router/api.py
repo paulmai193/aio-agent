@@ -109,38 +109,62 @@ async def process_user_request(
         tasks = await orchestrator.analyze_and_split_request(request.message)
         logger.info(f"Request split into {len(tasks)} tasks")
         
-        # Execute tasks in order of priority and dependencies
+        # Execute tasks with dependency-based pipeline processing
         results = []
         task_outputs = {}
+        completed_tasks = set()
+        task_map = {i: task for i, task in enumerate(tasks)}
         
-        # Sort tasks by priority
-        sorted_tasks = sorted(tasks, key=lambda x: x.get('priority', 1))
-        
-        for i, task in enumerate(sorted_tasks):
-            # Check dependencies
-            dependencies = task.get('dependencies', [])
-            if dependencies:
-                # Wait for dependencies (simplified - assumes sequential execution)
-                logger.debug(f"Task {i} has dependencies: {dependencies}")
+        while len(completed_tasks) < len(tasks):
+            executed_in_round = False
             
-            # Create agent request
-            agent_request = AgentRequest(
-                agent_type=task['agent_type'],
-                message=task['task_description'],
-                context=request.context
-            )
+            for i, task in task_map.items():
+                if i in completed_tasks:
+                    continue
+                
+                # Check if all dependencies are completed
+                dependencies = task.get('dependencies', [])
+                if not all(dep in completed_tasks for dep in dependencies):
+                    continue
+                
+                # Build enhanced message with dependency outputs
+                enhanced_message = task['task_description']
+                enhanced_context = dict(request.context) if request.context else {}
+                
+                if dependencies:
+                    enhanced_context['previous_outputs'] = {
+                        f"task_{dep}": task_outputs[dep] for dep in dependencies
+                    }
+                    
+                    # Inject dependency outputs into message
+                    for dep in dependencies:
+                        enhanced_message += f"\n\n--- Output from previous task {dep} ---\n{task_outputs[dep]}"
+                
+                # Create enhanced agent request
+                agent_request = AgentRequest(
+                    agent_type=task['agent_type'],
+                    message=enhanced_message,
+                    context=enhanced_context
+                )
+                
+                # Process task
+                logger.info(f"Executing task {i}: {task['agent_type']} (deps: {dependencies})")
+                result = await agent_manager.process_request(agent_request)
+                results.append(result)
+                task_outputs[i] = result.response
+                completed_tasks.add(i)
+                executed_in_round = True
+                
+                if not result.success:
+                    logger.warning(f"Task {i} failed: {result.error}")
             
-            # Process task
-            logger.info(f"Executing task {i+1}/{len(tasks)}: {task['agent_type']}")
-            result = await agent_manager.process_request(agent_request)
-            results.append(result)
-            task_outputs[i] = result.response
-            
-            if not result.success:
-                logger.warning(f"Task {i} failed: {result.error}")
+            # Prevent infinite loop if no tasks can be executed
+            if not executed_in_round:
+                logger.error("Circular dependency detected or invalid task structure")
+                break
         
         # Check overall success
-        overall_success = all(r.success for r in results)
+        overall_success = all(r.success for r in results) and len(completed_tasks) == len(tasks)
         
         return TaskResponse(
             tasks=tasks,
