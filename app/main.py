@@ -16,19 +16,28 @@ async def lifespan(app: FastAPI):
     """Quản lý lifecycle của ứng dụng."""
     # Startup
     logging.info("Starting Agent Orchestrator application...")
-    logging.info("Khởi tạo Agent Manager...")
-    agent_manager = AgentManager()
-    await agent_manager.initialize()
-    app.state.agent_manager = agent_manager
-    logging.info("Application startup completed")
+    agent_manager = None
+    try:
+        logging.info("Khởi tạo Agent Manager...")
+        agent_manager = AgentManager()
+        await agent_manager.initialize()
+        app.state.agent_manager = agent_manager
+        logging.info("Application startup completed")
+    except Exception as e:
+        logging.error(f"Failed to initialize Agent Manager: {e}")
+        raise
     
     yield
     
     # Shutdown
     logging.info("Shutting down Agent Orchestrator application...")
-    logging.info("Đóng Agent Manager...")
-    await agent_manager.cleanup()
-    logging.info("Application shutdown completed")
+    if agent_manager:
+        try:
+            logging.info("Đóng Agent Manager...")
+            await agent_manager.cleanup()
+            logging.info("Application shutdown completed")
+        except Exception as e:
+            logging.error(f"Error during cleanup: {e}")
 
 
 def create_app() -> FastAPI:
