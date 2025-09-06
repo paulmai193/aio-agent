@@ -4,8 +4,8 @@ Unit tests cho agents.
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 
-from agents.chat_agent import ChatAgent
-from agents.code_agent import CodeAgent
+from agents.ai_engineer_agent import AiEngineerAgent
+from agents.ui_designer_agent import UiDesignerAgent
 from core.schemas import AgentRequest
 
 
@@ -18,30 +18,28 @@ def mock_ollama_client():
 
 
 @pytest.mark.asyncio
-async def test_chat_agent_process(mock_ollama_client):
-    """Test ChatAgent process method."""
-    agent = ChatAgent(mock_ollama_client)
-    request = AgentRequest(agent_type="chat", message="Hello")
+async def test_ai_engineer_agent_process(mock_ollama_client):
+    """Test AiEngineerAgent process method."""
+    agent = AiEngineerAgent(mock_ollama_client)
+    request = AgentRequest(agent_type="aiengineer", message="Hello")
     
     response = await agent.process(request)
     
     assert response.success is True
-    assert response.agent_type == "chat"
+    assert response.agent_type == "aiengineer"
     assert "Test response" in response.response
 
 
 @pytest.mark.asyncio
-async def test_code_agent_process(mock_ollama_client):
-    """Test CodeAgent process method."""
-    agent = CodeAgent(mock_ollama_client)
+async def test_ui_designer_agent_process(mock_ollama_client):
+    """Test UiDesignerAgent process method."""
+    agent = UiDesignerAgent(mock_ollama_client)
     request = AgentRequest(
-        agent_type="code", 
-        message="Write a Python function",
-        context={"language": "python"}
+        agent_type="uidesigner", 
+        message="Design a login form"
     )
     
     response = await agent.process(request)
     
     assert response.success is True
-    assert response.agent_type == "code"
-    assert response.metadata["language"] == "python"
+    assert response.agent_type == "uidesigner"
