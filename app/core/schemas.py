@@ -3,13 +3,13 @@ Pydantic models cho request/response schemas.
 """
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class AgentRequest(BaseModel):
     """Request gửi đến agent."""
-    agent_type: str
-    message: str
+    agent_type: str = Field(..., min_length=1, description="Agent type must not be empty")
+    message: str = Field(..., min_length=1, description="Message must not be empty")
     context: Optional[Dict[str, Any]] = None
     parameters: Optional[Dict[str, Any]] = None
 

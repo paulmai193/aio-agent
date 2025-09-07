@@ -60,9 +60,18 @@ class AgentManager:
             )
         
         logger.info(f"Routing request đến agent: {agent_type}")
-        response = await agent.process(request)
-        logger.debug(f"Agent {agent_type} response: success={response.success}, response_length={len(response.response)}")
-        return response
+        try:
+            response = await agent.process(request)
+            logger.debug(f"Agent {agent_type} response: success={response.success}, response_length={len(response.response)}")
+            return response
+        except Exception as e:
+            logger.error(f"Agent {agent_type} processing failed: {e}")
+            return AgentResponse(
+                agent_type=agent_type,
+                response="",
+                success=False,
+                error=f"Agent processing error: {str(e)}"
+            )
     
     def get_agent(self, agent_type: str) -> Optional[BaseAgent]:
         """Lấy agent theo type."""
@@ -93,4 +102,7 @@ class AgentManager:
     async def cleanup(self):
         """Dọn dẹp resources."""
         logger.info("Dọn dẹp Agent Manager...")
-        await self.ollama_client.close()
+        try:
+            await self.ollama_client.close()
+        except Exception as e:
+            logger.error(f"Error closing ollama client: {e}")

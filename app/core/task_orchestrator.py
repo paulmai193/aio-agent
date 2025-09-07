@@ -29,6 +29,7 @@ class TaskOrchestrator(BaseAgent):
                 success=True
             )
         except Exception as e:
+            logger.error(f"Error processing request: {e}")
             return AgentResponse(
                 agent_type=self.agent_type,
                 response="",
@@ -55,7 +56,7 @@ Available agents and their capabilities:
 
 Analyze the user request and break it down into specific tasks. For each task, select the most appropriate agent.
 
-Return a JSON array of tasks in this format with out any explanation or extra text.
+Return a JSON array of tasks in this format without any explanation or extra text.
 IMPORTANT: You must respond with a valid JSON array only, no other text. The response must be parseable by json.loads().
 
 Example response format:

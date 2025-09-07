@@ -64,10 +64,14 @@ class OllamaClient:
     async def health_check(self) -> bool:
         """Kiểm tra kết nối đến Ollama."""
         logger.debug("Checking Ollama health")
+        session = await self._get_session()
+        url = f"{self.base_url}/api/version"
+        
         try:
-            await self.list_models()
-            logger.debug("Ollama health check passed")
-            return True
+            async with session.get(url, timeout=aiohttp.ClientTimeout(total=5)) as response:
+                response.raise_for_status()
+                logger.debug("Ollama health check passed")
+                return True
         except Exception as e:
             logger.warning(f"Ollama không khả dụng: {e}")
             return False

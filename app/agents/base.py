@@ -16,7 +16,22 @@ class BaseAgent(ABC):
     
     def __init__(self, ollama_client: OllamaClient):
         self.ollama_client = ollama_client
-        self.agent_type = self.__class__.__name__.lower().replace('agent', '')
+        # Use explicit agent_type mapping for reliability
+        class_name = self.__class__.__name__
+        agent_type_map = {
+            'AiEngineerAgent': 'aiengineer',
+            'BackendArchitectAgent': 'backendarchitect', 
+            'FrontendDeveloperAgent': 'frontenddeveloper',
+            'RapidPrototyperAgent': 'rapidprototyper',
+            'DevopsAutomatorAgent': 'devopsautomator',
+            'TestWriterFixerAgent': 'testwriterfixer',
+            'UiDesignerAgent': 'uidesigner',
+            'ContentCreatorAgent': 'contentcreator',
+            'GrowthHackerAgent': 'growthhacker',
+            'TrendResearcherAgent': 'trendresearcher',
+            'ProjectShipperAgent': 'projectshipper'
+        }
+        self.agent_type = agent_type_map.get(class_name, class_name.lower().replace('agent', ''))
     
     @abstractmethod
     async def process(self, request: AgentRequest) -> AgentResponse:

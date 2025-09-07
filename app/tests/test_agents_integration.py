@@ -1,6 +1,10 @@
 """Test script để kiểm tra tích hợp agents."""
 import asyncio
 import logging
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from core.agent_manager import AgentManager
 from core.schemas import AgentRequest
 
@@ -13,8 +17,6 @@ async def test_agents():
     
     # Test requests cho từng loại agent
     test_cases = [
-        ("chat", "Xin chào, bạn có thể giúp tôi không?"),
-        ("code", "Viết function Python để tính factorial"),
         ("aiengineer", "Tích hợp AI chatbot vào ứng dụng web"),
         ("uidesigner", "Thiết kế giao diện đăng nhập hiện đại"),
         ("contentcreator", "Tạo content marketing cho app mobile"),
@@ -42,6 +44,7 @@ async def test_agents():
             else:
                 print(f"❌ {agent_type}: {response.error}")
         except Exception as e:
+            logging.error(f"Agent {agent_type} exception: {e}", exc_info=True)
             print(f"❌ {agent_type}: Exception - {e}")
     
     await manager.cleanup()
