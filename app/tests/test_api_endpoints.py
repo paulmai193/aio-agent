@@ -5,6 +5,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from unittest.mock import AsyncMock, MagicMock, patch
+import json
 from fastapi.testclient import TestClient
 from fastapi import FastAPI
 from router.api import router, get_agent_manager
@@ -236,3 +237,85 @@ def test_process_user_request_invalid_input(client):
     })
     
     assert response.status_code == 422  # Validation error
+
+
+@patch('core.agent_manager.AgentManager.process_request')
+def test_chat_with_language_detection(mock_process, client):
+    """Test chat endpoint with language detection."""
+    # Mock language detection response
+    mock_lang_response = AgentResponse(
+        agent_type="languagedetector",
+        response="vi",
+        success=True
+    )
+    
+    # Mock actual agent response
+    mock_agent_response = AgentResponse(
+        agent_type="aiengineer",
+        response="Xin chào! Tôi có thể giúp bạn tạo ứng dụng web.",
+        success=True
+    )
+    
+    # Configure mock to return different responses for different calls
+    mock_process.side_effect = [mock_lang_response, mock_agent_response]
+    
+    response = client.post("/api/v1/chat", json={
+        "agent_type": "aiengineer",
+        "message": "Tạo ứng dụng web"
+    })
+    
+    assert response.status_code == 200
+    data = response.json()
+    assert data["success"] is True
+    assert "Xin chào" in data["response"]
+    
+    # Verify language detection was called
+    assert mock_process.call_count == 2
+    first_call = mock_process.call_args_list[0][0][0]
+    assert first_call.agent_type == "languagedetector"
+
+
+@patch('core.agent_manager.AgentManager.process_request')
+def test_process_with_language_detection(mock_process, client):
+    """Test process endpoint with language detection."""
+    # Mock language detection
+    mock_lang_response = AgentResponse(
+        agent_type="languagedetector",
+        response="en",
+        success=True
+    )
+    
+    # Mock task orchestrator
+    mock_tasks = [{"task_description": "Create web app", "agent_type": "aiengineer", "priority": 1, "dependencies": []}]
+    mock_orchestrator_response = AgentResponse(
+        agent_type="taskorchestrator",
+        response=json.dumps(mock_tasks),
+        success=True
+    )
+    
+    # Mock agent execution
+    mock_agent_response = AgentResponse(
+        agent_type="aiengineer",
+        response="I'll help you create a web application.",
+        success=True
+    )
+    
+    mock_process.side_effect = [mock_lang_response, mock_orchestrator_response, mock_agent_response]
+    
+    with patch('router.api.TaskOrchestrator') as mock_orchestrator_class:
+        mock_orchestrator = MagicMock()
+        mock_orchestrator.analyze_and_split_request = AsyncMock(return_value=mock_tasks)
+        mock_orchestrator_class.return_value = mock_orchestrator
+        
+        response = client.post("/api/v1/process", json={
+            "message": "Create a web application"
+        })
+    
+    assert response.status_code == 200
+    data = response.json()
+    assert data["success"] is True
+    assert len(data["results"]) == 1
+    
+    # Verify language detection was called first
+    first_call = mock_process.call_args_list[0][0][0]
+    assert first_call.agent_type == "languagedetector"
