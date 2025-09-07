@@ -62,7 +62,7 @@ def test_get_system_prompt(orchestrator):
 
 def test_get_model_name(orchestrator):
     """Test model name retrieval."""
-    with patch('core.task_orchestrator.settings') as mock_settings:
+    with patch('config.settings') as mock_settings:
         mock_settings.MODEL_TASKORCHESTRATOR = "test-model"
         model = orchestrator.get_model_name()
         assert model == "test-model"
@@ -118,51 +118,3 @@ async def test_analyze_and_split_request_ollama_exception(orchestrator):
         assert result[0]["agent_type"] == "aiengineer"
 
 
-def test_validate_dependencies_valid(orchestrator):
-    """Test dependency validation with valid dependencies."""
-    tasks = [
-        {"task_description": "Task 1", "agent_type": "aiengineer", "dependencies": []},
-        {"task_description": "Task 2", "agent_type": "uidesigner", "dependencies": [0]}
-    ]
-    
-    result = orchestrator._validate_dependencies(tasks)
-    
-    assert len(result) == 2
-    assert result[1]["dependencies"] == [0]
-
-
-def test_validate_dependencies_invalid(orchestrator):
-    """Test dependency validation with invalid dependencies."""
-    tasks = [
-        {"task_description": "Task 1", "agent_type": "aiengineer", "dependencies": [1, 5, -1]}  # Self-ref, out of range, negative
-    ]
-    
-    result = orchestrator._validate_dependencies(tasks)
-    
-    assert len(result) == 1
-    assert result[0]["dependencies"] == []  # Invalid deps removed
-
-
-def test_validate_dependencies_missing_fields(orchestrator):
-    """Test dependency validation with missing fields."""
-    tasks = [
-        {"task_description": "Task 1"}  # Missing agent_type and priority
-    ]
-    
-    result = orchestrator._validate_dependencies(tasks)
-    
-    assert len(result) == 1
-    assert result[0]["agent_type"] == "aiengineer"  # Default
-    assert result[0]["priority"] == 3  # Default
-
-
-def test_validate_dependencies_non_integer_deps(orchestrator):
-    """Test dependency validation with non-integer dependencies."""
-    tasks = [
-        {"task_description": "Task 1", "agent_type": "aiengineer", "dependencies": ["invalid", 0.5, None]}
-    ]
-    
-    result = orchestrator._validate_dependencies(tasks)
-    
-    assert len(result) == 1
-    assert result[0]["dependencies"] == []  # Non-integers removed

@@ -5,7 +5,7 @@ import logging
 from typing import List, Dict, Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from core.agent_manager import AgentManager
 from core.task_orchestrator import TaskOrchestrator
@@ -18,7 +18,7 @@ router = APIRouter()
 
 class UserRequest(BaseModel):
     """Request model cho user input."""
-    message: str
+    message: str = Field(..., min_length=1, description="User message cannot be empty")
     context: Optional[Dict[str, Any]] = None
 
 class TaskResponse(BaseModel):
@@ -50,6 +50,8 @@ async def chat_endpoint(
         logger.info(f"Agent {request.agent_type} processed successfully")
         return response
     
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Lỗi xử lý request: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -173,6 +175,16 @@ async def process_user_request(
             error=None if overall_success else "Some tasks failed"
         )
         
+    except Exception as e:
+        logger.error(f"Error processing user request: {e}")
+        return TaskResponse(
+            tasks=[],
+            results=[],
+            success=False,
+            error=str(e)
+        )
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error processing user request: {e}")
         return TaskResponse(

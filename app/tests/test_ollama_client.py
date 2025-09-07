@@ -69,8 +69,9 @@ async def test_generate_success(ollama_client):
 async def test_generate_connection_error(ollama_client):
     """Test generation with connection error."""
     mock_session = MagicMock()
+    os_error = OSError("Connection failed")
     mock_session.post.side_effect = aiohttp.ClientConnectorError(
-        connection_key=MagicMock(), os_error=Exception("Connection failed")
+        connection_key=MagicMock(), os_error=os_error
     )
     
     with patch.object(ollama_client, '_get_session', return_value=mock_session):
