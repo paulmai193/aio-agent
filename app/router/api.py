@@ -41,7 +41,46 @@ async def chat_endpoint(
     """Endpoint chính để xử lý request từ user."""
     try:
         logger.info(f"Nhận request cho agent: {request.agent_type}, message: {request.message[:50]}...")
-        response = await agent_manager.process_request(request)
+        
+        # Detect language using LanguageDetectorAgent
+        lang_request = AgentRequest(
+            agent_type="languagedetector",
+            message=request.message
+        )
+        lang_response = await agent_manager.process_request(lang_request)
+        
+        if lang_response.success:
+            detected_lang = lang_response.response.strip()
+            logger.info(f"Detected language: {detected_lang}")
+            
+            # Language instructions
+            lang_instructions = {
+                'vi': 'Hãy trả lời bằng tiếng Việt.',
+                'en': 'Please respond in English.',
+                'zh': '请用中文回答。',
+                'ja': '日本語で回答してください。',
+                'ko': '한국어로 답변해 주세요.',
+                'fr': 'Veuillez répondre en français.',
+                'de': 'Bitte antworten Sie auf Deutsch.',
+                'es': 'Por favor responda en español.',
+            }
+            
+            lang_instruction = lang_instructions.get(detected_lang, lang_instructions['en'])
+            
+            # Enhance request with language instruction
+            enhanced_context = dict(request.context) if request.context else {}
+            enhanced_context['language'] = detected_lang
+            enhanced_message = f"{request.message}\n\n{lang_instruction}"
+            
+            enhanced_request = AgentRequest(
+                agent_type=request.agent_type,
+                message=enhanced_message,
+                context=enhanced_context
+            )
+        else:
+            enhanced_request = request
+        
+        response = await agent_manager.process_request(enhanced_request)
         
         if not response.success:
             logger.warning(f"Agent {request.agent_type} failed: {response.error}")
@@ -104,6 +143,34 @@ async def process_user_request(
     try:
         logger.info(f"Processing user request: {request.message[:50]}...")
         
+        # Detect language using LanguageDetectorAgent
+        lang_request = AgentRequest(
+            agent_type="languagedetector",
+            message=request.message
+        )
+        lang_response = await agent_manager.process_request(lang_request)
+        
+        detected_lang = 'en'  # Default
+        lang_instruction = 'Please respond in English.'
+        
+        if lang_response.success:
+            detected_lang = lang_response.response.strip()
+            logger.info(f"Detected language: {detected_lang}")
+            
+            # Language instructions
+            lang_instructions = {
+                'vi': 'Hãy trả lời bằng tiếng Việt.',
+                'en': 'Please respond in English.',
+                'zh': '请用中文回答。',
+                'ja': '日本語で回答してください。',
+                'ko': '한국어로 답변해 주세요.',
+                'fr': 'Veuillez répondre en français.',
+                'de': 'Bitte antworten Sie auf Deutsch.',
+                'es': 'Por favor responda en español.',
+            }
+            
+            lang_instruction = lang_instructions.get(detected_lang, lang_instructions['en'])
+        
         # Initialize task orchestrator
         orchestrator = TaskOrchestrator(agent_manager.ollama_client)
         
@@ -129,9 +196,10 @@ async def process_user_request(
                 if not all(dep in completed_tasks for dep in dependencies):
                     continue
                 
-                # Build enhanced message with dependency outputs
+                # Build enhanced message with dependency outputs and language instruction
                 enhanced_message = task['task_description']
                 enhanced_context = dict(request.context) if request.context else {}
+                enhanced_context['language'] = detected_lang
                 
                 if dependencies:
                     enhanced_context['previous_outputs'] = {
@@ -141,6 +209,9 @@ async def process_user_request(
                     # Inject dependency outputs into message
                     for dep in dependencies:
                         enhanced_message += f"\n\n--- Output from previous task {dep} ---\n{task_outputs[dep]}"
+                
+                # Add language instruction to ensure consistent language
+                enhanced_message += f"\n\n{lang_instruction}"
                 
                 # Create enhanced agent request
                 agent_request = AgentRequest(
