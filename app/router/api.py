@@ -50,6 +50,8 @@ async def chat_endpoint(
         logger.info(f"Agent {request.agent_type} processed successfully")
         return response
     
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Lỗi xử lý request: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -173,6 +175,16 @@ async def process_user_request(
             error=None if overall_success else "Some tasks failed"
         )
         
+    except Exception as e:
+        logger.error(f"Error processing user request: {e}")
+        return TaskResponse(
+            tasks=[],
+            results=[],
+            success=False,
+            error=str(e)
+        )
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error processing user request: {e}")
         return TaskResponse(
