@@ -239,8 +239,7 @@ def test_process_user_request_invalid_input(client):
     assert response.status_code == 422  # Validation error
 
 
-@patch('core.agent_manager.AgentManager.process_request')
-def test_chat_with_language_detection(mock_process, client):
+def test_chat_with_language_detection(client, mock_agent_manager):
     """Test chat endpoint with language detection."""
     # Mock language detection response
     mock_lang_response = AgentResponse(
@@ -257,7 +256,7 @@ def test_chat_with_language_detection(mock_process, client):
     )
     
     # Configure mock to return different responses for different calls
-    mock_process.side_effect = [mock_lang_response, mock_agent_response]
+    mock_agent_manager.process_request.side_effect = [mock_lang_response, mock_agent_response]
     
     response = client.post("/api/v1/chat", json={
         "agent_type": "aiengineer",
@@ -270,13 +269,12 @@ def test_chat_with_language_detection(mock_process, client):
     assert "Xin chào" in data["response"]
     
     # Verify language detection was called
-    assert mock_process.call_count == 2
-    first_call = mock_process.call_args_list[0][0][0]
+    assert mock_agent_manager.process_request.call_count == 2
+    first_call = mock_agent_manager.process_request.call_args_list[0][0][0]
     assert first_call.agent_type == "languagedetector"
 
 
-@patch('core.agent_manager.AgentManager.process_request')
-def test_process_with_language_detection(mock_process, client):
+def test_process_with_language_detection(client, mock_agent_manager):
     """Test process endpoint with language detection."""
     # Mock language detection
     mock_lang_response = AgentResponse(
@@ -300,7 +298,7 @@ def test_process_with_language_detection(mock_process, client):
         success=True
     )
     
-    mock_process.side_effect = [mock_lang_response, mock_orchestrator_response, mock_agent_response]
+    mock_agent_manager.process_request.side_effect = [mock_lang_response, mock_orchestrator_response, mock_agent_response]
     
     with patch('router.api.TaskOrchestrator') as mock_orchestrator_class:
         mock_orchestrator = MagicMock()
@@ -317,5 +315,5 @@ def test_process_with_language_detection(mock_process, client):
     assert len(data["results"]) == 1
     
     # Verify language detection was called first
-    first_call = mock_process.call_args_list[0][0][0]
+    first_call = mock_agent_manager.process_request.call_args_list[0][0][0]
     assert first_call.agent_type == "languagedetector"
