@@ -5,7 +5,7 @@ import logging
 from typing import List, Dict, Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from core.agent_manager import AgentManager
 from core.task_orchestrator import TaskOrchestrator
@@ -18,7 +18,7 @@ router = APIRouter()
 
 class UserRequest(BaseModel):
     """Request model cho user input."""
-    message: str
+    message: str = Field(..., min_length=1, description="User message cannot be empty")
     context: Optional[Dict[str, Any]] = None
 
 class TaskResponse(BaseModel):
