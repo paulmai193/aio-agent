@@ -5,9 +5,9 @@ name: Python application
 
 on:
   push:
-    branches: [ "sanity", "staging" ]
+    branches: [ "github-action", "staging" ]
   pull_request:
-    branches: [ "sanity", "staging" ]
+    branches: [ "staging" ]
 
 permissions:
   contents: read
