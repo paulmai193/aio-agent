@@ -7,7 +7,7 @@ from typing import Dict, List, Optional
 from agents import (BaseAgent, AiEngineerAgent, UiDesignerAgent, ContentCreatorAgent, 
                     BackendArchitectAgent, FrontendDeveloperAgent, RapidPrototyperAgent, 
                     GrowthHackerAgent, TrendResearcherAgent, DevopsAutomatorAgent, 
-                    TestWriterFixerAgent, ProjectShipperAgent)
+                    TestWriterFixerAgent, ProjectShipperAgent, LanguageDetectorAgent)
 from core.ollama_client import OllamaClient
 from core.schemas import AgentRequest, AgentResponse
 
@@ -29,12 +29,12 @@ class AgentManager:
         
         # Khởi tạo các agent có sẵn
         agents_to_init = [
-            ("aiengineer", AiEngineerAgent), ("uidesigner", UiDesignerAgent), 
-            ("contentcreator", ContentCreatorAgent), ("backendarchitect", BackendArchitectAgent), 
-            ("frontenddeveloper", FrontendDeveloperAgent), ("rapidprototyper", RapidPrototyperAgent), 
-            ("growthhacker", GrowthHackerAgent), ("trendresearcher", TrendResearcherAgent), 
-            ("devopsautomator", DevopsAutomatorAgent), ("testwriterfixer", TestWriterFixerAgent), 
-            ("projectshipper", ProjectShipperAgent)
+            ("languagedetector", LanguageDetectorAgent), ("aiengineer", AiEngineerAgent), 
+            ("uidesigner", UiDesignerAgent), ("contentcreator", ContentCreatorAgent), 
+            ("backendarchitect", BackendArchitectAgent), ("frontenddeveloper", FrontendDeveloperAgent), 
+            ("rapidprototyper", RapidPrototyperAgent), ("growthhacker", GrowthHackerAgent), 
+            ("trendresearcher", TrendResearcherAgent), ("devopsautomator", DevopsAutomatorAgent), 
+            ("testwriterfixer", TestWriterFixerAgent), ("projectshipper", ProjectShipperAgent)
         ]
         
         for agent_name, agent_class in agents_to_init:

@@ -30,9 +30,10 @@ def agent_manager(mock_ollama_client):
 async def test_initialize_success(agent_manager):
     """Test successful agent initialization."""
     await agent_manager.initialize()
-    assert len(agent_manager.agents) == 11
+    assert len(agent_manager.agents) == 12
     assert 'aiengineer' in agent_manager.agents
     assert 'uidesigner' in agent_manager.agents
+    assert 'languagedetector' in agent_manager.agents
 
 
 @pytest.mark.asyncio
@@ -124,9 +125,9 @@ async def test_health_check_success(agent_manager, mock_ollama_client):
     
     result = await agent_manager.health_check()
     
-    assert result["agents_loaded"] == 11
+    assert result["agents_loaded"] == 12
     assert result["ollama_connected"] is True
-    assert len(result["agent_types"]) == 11
+    assert len(result["agent_types"]) == 12
 
 
 @pytest.mark.asyncio
@@ -137,7 +138,7 @@ async def test_health_check_ollama_down(agent_manager, mock_ollama_client):
     
     result = await agent_manager.health_check()
     
-    assert result["agents_loaded"] == 11
+    assert result["agents_loaded"] == 12
     assert result["ollama_connected"] is False
 
 
