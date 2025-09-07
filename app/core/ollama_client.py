@@ -35,15 +35,32 @@ class OllamaClient:
         session = await self._get_session()
         url = f"{self.base_url}/api/generate"
         
+        payload = {
+            "model": request.model,
+            "prompt": request.prompt,
+            "stream": False
+        }
+        
         try:
-            async with session.post(url, json=request.dict(), timeout=self.timeout) as response:
+            async with session.post(url, json=payload, timeout=self.timeout) as response:
+                if response.status == 404:
+                    logger.error(f"Model {request.model} not found. Available models: {await self._get_available_models()}")
                 response.raise_for_status()
                 data = await response.json()
                 logger.debug(f"Ollama response received, length: {len(data.get('response', ''))}")
                 return OllamaResponse(**data)
         except (aiohttp.ClientError, asyncio.TimeoutError) as e:
-            logger.error(f"Lỗi khi gọi Ollama API: {e}")
+            logger.error(f"Lỗi khi gọi Ollama API: {e}, URL: {url}")
             raise
+    
+    async def _get_available_models(self) -> str:
+        """Lấy danh sách models có sẵn."""
+        try:
+            models_data = await self.list_models()
+            models = [m.get('name', 'unknown') for m in models_data.get('models', [])]
+            return ', '.join(models) if models else 'No models found'
+        except Exception:
+            return 'Unable to fetch models'
     
     async def list_models(self) -> Dict[str, Any]:
         """Lấy danh sách models từ Ollama."""

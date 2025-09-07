@@ -7,13 +7,16 @@ services:
       dockerfile: Dockerfile.prod
     ports:
       - "8000:8000"
+    env_file:
+      - ./app/.env.prod
+    depends_on:
+      ollama:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - ollama-network
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
-      - DEBUG=false
-      - LOG_LEVEL=INFO
-    depends_on:
-      - ollama
-    restart: unless-stopped
     
   ollama:
     image: ollama/ollama:latest
@@ -24,6 +27,18 @@ services:
     environment:
       - OLLAMA_ORIGINS=*
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/bin/ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    networks:
+      - ollama-network
+
+networks:
+  ollama-network:
+    driver: bridge
 
 volumes:
   ollama_data_prod:
