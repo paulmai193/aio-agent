@@ -46,8 +46,13 @@ def test_agent_type_mapping():
     
     # Test known agent types
     from agents.ai_engineer_agent import AiEngineerAgent
-    agent = AiEngineerAgent(mock_client)
-    assert agent.agent_type == "aiengineer"
+    from agents.language_detector_agent import LanguageDetectorAgent
+    
+    ai_agent = AiEngineerAgent(mock_client)
+    assert ai_agent.agent_type == "aiengineer"
+    
+    lang_agent = LanguageDetectorAgent(mock_client)
+    assert lang_agent.agent_type == "languagedetector"
 
 
 def test_agent_type_fallback():
