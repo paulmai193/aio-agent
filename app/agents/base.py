@@ -49,19 +49,35 @@ class BaseAgent(ABC):
         """Lấy tên model Ollama sử dụng."""
         pass
     
+    def get_standard_schema(self) -> Dict[str, Any]:
+        """Lấy chuẩn JSON schema cho tất cả agent."""
+        return {
+            "type": "object",
+            "properties": {
+                "solution": {"type": "string", "description": "Detailed solution and approach"},
+                "implementation": {"type": "array", "items": {"type": "string"}, "description": "Implementation steps or code examples"},
+                "technologies": {"type": "array", "items": {"type": "string"}, "description": "Required technologies"},
+                "considerations": {"type": "array", "items": {"type": "string"}, "description": "Important considerations"}
+            },
+            "required": ["solution", "implementation", "technologies", "considerations"]
+        }
+    
     async def call_ollama(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
         """Gọi Ollama với prompt."""
         logger.debug(f"Agent {self.agent_type} calling Ollama with model: {self.get_model_name()}")
+        
         system_prompt = self.get_system_prompt()
-        full_prompt = f"{system_prompt}\n\nUser: {prompt}"
+        format_schema = self.get_standard_schema()
         
         ollama_request = OllamaRequest(
             model=self.get_model_name(),
-            prompt=full_prompt
+            system=system_prompt,
+            prompt=prompt,
+            format=format_schema
         )
-        
+        logger.debug(f"Ollama request: {ollama_request}")
         response = await self.ollama_client.generate(ollama_request)
-        logger.debug(f"Agent {self.agent_type} received response from Ollama")
+        logger.debug(f"Agent {self.agent_type} received response from Ollama: {response}")
         return response.response
     
     def can_handle(self, request: AgentRequest) -> bool:

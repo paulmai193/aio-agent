@@ -2,6 +2,7 @@
 Language Detector Agent - Chuyên gia phát hiện ngôn ngữ văn bản.
 """
 import logging
+import json
 from typing import Dict, Any, Optional
 
 from agents.base import BaseAgent
@@ -21,9 +22,13 @@ class LanguageDetectorAgent(BaseAgent):
             # Gọi LLM để phát hiện ngôn ngữ
             response = await self.call_ollama(request.message, request.context)
             
+            # Parse JSON response and extract language
+            response_json = json.loads(response)
+            language_code = response_json.get("language", "en")
+            
             return AgentResponse(
                 agent_type=self.agent_type,
-                response=response.strip(),
+                response=language_code,
                 success=True
             )
             
@@ -31,7 +36,7 @@ class LanguageDetectorAgent(BaseAgent):
             logger.error(f"Language detection failed: {e}")
             return AgentResponse(
                 agent_type=self.agent_type,
-                response="",
+                response="en",
                 success=False,
                 error=str(e)
             )
@@ -78,3 +83,13 @@ Output: zh"""
         """Lấy tên model Ollama sử dụng."""
         from config import settings
         return settings.MODEL_LANGUAGEDETECTOR
+    
+    def get_standard_schema(self) -> Dict[str, Any]:
+        """Override schema cho language detection."""
+        return {
+            "type": "object",
+            "properties": {
+                "language": {"type": "string"}
+            },
+            "required": ["language"]
+        }

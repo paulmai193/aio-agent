@@ -82,6 +82,20 @@ The system will automatically pass outputs from dependency tasks as context to d
         from config import settings
         return settings.MODEL_TASKORCHESTRATOR
     
+    def get_standard_schema(self) -> Dict[str, Any]:
+        """Override schema cho task orchestrator."""
+        return {
+            "type": "object",
+            "properties": {
+                "task_description": {"type": "string"},
+                "task_accomplish": {"type": "string"},
+                "agent_type": {"type": "string"},
+                "priority": {"type": "integer"},
+                "dependencies": {"type": "array", "items": {"type": "integer"}}
+            },
+            "required": ["task_description", "task_accomplish", "agent_type", "priority", "dependencies"]
+        }
+    
     async def analyze_and_split_request(self, user_request: str) -> List[Dict[str, Any]]:
         """Phân tích request và chia thành các tasks với agent phù hợp."""
         try:

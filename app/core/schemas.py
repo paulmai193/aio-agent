@@ -26,10 +26,21 @@ class AgentResponse(BaseModel):
 class OllamaRequest(BaseModel):
     """Request gửi đến Ollama."""
     model: str
+    system: Optional[str] = None
     prompt: str
     stream: bool = False
+    format: Optional[Dict[str, Any]] = None
     options: Optional[Dict[str, Any]] = None
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "model": self.model,
+            "system": self.system,
+            "prompt": self.prompt,
+            "stream": self.stream,
+            "format": self.format,
+            "options": self.options
+        }
 
 class OllamaResponse(BaseModel):
     """Response từ Ollama."""
