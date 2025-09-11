@@ -8,7 +8,7 @@ from agents import (BaseAgent, AiEngineerAgent, UiDesignerAgent, ContentCreatorA
                     BackendArchitectAgent, FrontendDeveloperAgent, RapidPrototyperAgent, 
                     GrowthHackerAgent, TrendResearcherAgent, DevopsAutomatorAgent, 
                     TestWriterFixerAgent, ProjectShipperAgent, LanguageDetectorAgent, 
-                    BrandGuardianAgent)
+                    BrandGuardianAgent, UxResearcherAgent)
 from core.ollama_client import OllamaClient
 from core.schemas import AgentRequest, AgentResponse
 
@@ -36,7 +36,7 @@ class AgentManager:
             ("rapidprototyper", RapidPrototyperAgent), ("growthhacker", GrowthHackerAgent), 
             ("trendresearcher", TrendResearcherAgent), ("devopsautomator", DevopsAutomatorAgent), 
             ("testwriterfixer", TestWriterFixerAgent), ("projectshipper", ProjectShipperAgent), 
-            ("brandguardian", BrandGuardianAgent)
+            ("brandguardian", BrandGuardianAgent), ("uxresearcher", UxResearcherAgent)
         ]
         
         for agent_name, agent_class in agents_to_init:

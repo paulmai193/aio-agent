@@ -38,6 +38,7 @@ class Settings(BaseSettings):
     MODEL_TASKORCHESTRATOR: str = "deepseek-r1:1.5b"
     MODEL_LANGUAGEDETECTOR: str = "llama2"
     MODEL_BRANDGUARDIAN: str = "llama2"
+    MODEL_UXRESEARCHER: str = "llama2"
     
     # Logging
     LOG_LEVEL: str = "DEBUG"

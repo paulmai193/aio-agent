@@ -48,6 +48,7 @@ def test_agent_type_mapping():
     from agents.ai_engineer_agent import AiEngineerAgent
     from agents.language_detector_agent import LanguageDetectorAgent
     from agents.brand_guardian_agent import BrandGuardianAgent
+    from agents.ux_researcher_agent import UxResearcherAgent
     
     ai_agent = AiEngineerAgent(mock_client)
     assert ai_agent.agent_type == "aiengineer"
@@ -57,6 +58,9 @@ def test_agent_type_mapping():
     
     brand_agent = BrandGuardianAgent(mock_client)
     assert brand_agent.agent_type == "brandguardian"
+    
+    ux_agent = UxResearcherAgent(mock_client)
+    assert ux_agent.agent_type == "uxresearcher"
 
 
 def test_agent_type_fallback():
