@@ -71,13 +71,13 @@ Rules:
 
 Examples:
 Input: "Xin chào, tôi cần giúp đỡ"
-Output: vi
+Output: {"language": "vi"}
 
 Input: "Hello, I need help"
-Output: en
+Output: {"language": "en"}
 
 Input: "你好，我需要帮助"
-Output: zh"""
+Output: {"language": "zh"}"""
     
     def get_model_name(self) -> str:
         """Lấy tên model Ollama sử dụng."""

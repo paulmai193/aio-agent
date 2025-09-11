@@ -14,10 +14,12 @@ from .devops_automator_agent import DevopsAutomatorAgent
 from .test_writer_fixer_agent import TestWriterFixerAgent
 from .project_shipper_agent import ProjectShipperAgent
 from .language_detector_agent import LanguageDetectorAgent
+from .brand_guardian_agent import BrandGuardianAgent
 
 __all__ = [
     "BaseAgent", "AiEngineerAgent", "UiDesignerAgent", "ContentCreatorAgent", 
     "BackendArchitectAgent", "FrontendDeveloperAgent", "RapidPrototyperAgent", 
     "GrowthHackerAgent", "TrendResearcherAgent", "DevopsAutomatorAgent", 
-    "TestWriterFixerAgent", "ProjectShipperAgent", "LanguageDetectorAgent"
+    "TestWriterFixerAgent", "ProjectShipperAgent", "LanguageDetectorAgent", 
+    "BrandGuardianAgent"
 ]

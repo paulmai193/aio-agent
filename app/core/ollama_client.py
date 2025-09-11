@@ -37,8 +37,11 @@ class OllamaClient:
         
         payload = {
             "model": request.model,
+            "system": request.system,
             "prompt": request.prompt,
-            "stream": False
+            "stream": request.stream,
+            "format": request.format,
+            "options": request.options
         }
         
         try:
