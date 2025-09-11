@@ -39,6 +39,7 @@ class Settings(BaseSettings):
     MODEL_LANGUAGEDETECTOR: str = "llama2"
     MODEL_BRANDGUARDIAN: str = "llama2"
     MODEL_UXRESEARCHER: str = "llama2"
+    MODEL_VISUALSTORYTELLER: str = "mistral"
     
     # Logging
     LOG_LEVEL: str = "DEBUG"

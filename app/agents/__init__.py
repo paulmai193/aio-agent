@@ -16,11 +16,12 @@ from .project_shipper_agent import ProjectShipperAgent
 from .language_detector_agent import LanguageDetectorAgent
 from .brand_guardian_agent import BrandGuardianAgent
 from .ux_researcher_agent import UxResearcherAgent
+from .visual_storyteller_agent import VisualStorytellerAgent
 
 __all__ = [
     "BaseAgent", "AiEngineerAgent", "UiDesignerAgent", "ContentCreatorAgent", 
     "BackendArchitectAgent", "FrontendDeveloperAgent", "RapidPrototyperAgent", 
     "GrowthHackerAgent", "TrendResearcherAgent", "DevopsAutomatorAgent", 
     "TestWriterFixerAgent", "ProjectShipperAgent", "LanguageDetectorAgent", 
-    "BrandGuardianAgent", "UxResearcherAgent"
+    "BrandGuardianAgent", "UxResearcherAgent", "VisualStorytellerAgent"
 ]
