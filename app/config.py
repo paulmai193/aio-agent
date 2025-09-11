@@ -40,6 +40,7 @@ class Settings(BaseSettings):
     MODEL_BRANDGUARDIAN: str = "llama2"
     MODEL_UXRESEARCHER: str = "llama2"
     MODEL_VISUALSTORYTELLER: str = "mistral"
+    MODEL_WHIMSYINJECTOR: str = "mistral"
     
     # Logging
     LOG_LEVEL: str = "DEBUG"
