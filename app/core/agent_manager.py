@@ -9,7 +9,8 @@ from agents import (BaseAgent, AiEngineerAgent, UiDesignerAgent, ContentCreatorA
                     GrowthHackerAgent, TrendResearcherAgent, DevopsAutomatorAgent, 
                     TestWriterFixerAgent, ProjectShipperAgent, LanguageDetectorAgent, 
                     BrandGuardianAgent, UxResearcherAgent, VisualStorytellerAgent, 
-                    WhimsyInjectorAgent, InstagramCuratorAgent, TiktokStrategistAgent)
+                    WhimsyInjectorAgent, InstagramCuratorAgent, TiktokStrategistAgent, 
+                    FeedbackSynthesizerAgent)
 from core.ollama_client import OllamaClient
 from core.schemas import AgentRequest, AgentResponse
 
@@ -39,7 +40,8 @@ class AgentManager:
             ("testwriterfixer", TestWriterFixerAgent), ("projectshipper", ProjectShipperAgent), 
             ("brandguardian", BrandGuardianAgent), ("uxresearcher", UxResearcherAgent), 
             ("visualstoryteller", VisualStorytellerAgent), ("whimsyinjector", WhimsyInjectorAgent), 
-            ("instagramcurator", InstagramCuratorAgent), ("tiktokstrategist", TiktokStrategistAgent)
+            ("instagramcurator", InstagramCuratorAgent), ("tiktokstrategist", TiktokStrategistAgent), 
+            ("feedbacksynthesizer", FeedbackSynthesizerAgent)
         ]
         
         for agent_name, agent_class in agents_to_init:
