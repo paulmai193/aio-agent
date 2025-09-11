@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     MODEL_INSTAGRAMCURATOR: str = "llama3.2"
     MODEL_TIKTOKSTRATEGIST: str = "llama3.2"
     MODEL_FEEDBACKSYNTHESIZER: str = "llama3.2"
+    MODEL_TRENDRESEARCHER: str = "llama3.2"
     
     # Logging
     LOG_LEVEL: str = "DEBUG"

@@ -21,6 +21,7 @@ from .whimsy_injector_agent import WhimsyInjectorAgent
 from .instagram_curator_agent import InstagramCuratorAgent
 from .tiktok_strategist_agent import TiktokStrategistAgent
 from .feedback_synthesizer_agent import FeedbackSynthesizerAgent
+from .trend_researcher_agent import TrendResearcherAgent
 
 __all__ = [
     "BaseAgent", "AiEngineerAgent", "UiDesignerAgent", "ContentCreatorAgent", 
@@ -29,5 +30,5 @@ __all__ = [
     "TestWriterFixerAgent", "ProjectShipperAgent", "LanguageDetectorAgent", 
     "BrandGuardianAgent", "UxResearcherAgent", "VisualStorytellerAgent", 
     "WhimsyInjectorAgent", "InstagramCuratorAgent", "TiktokStrategistAgent", 
-    "FeedbackSynthesizerAgent"
+    "FeedbackSynthesizerAgent", "TrendResearcherAgent"
 ]
