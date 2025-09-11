@@ -34,7 +34,8 @@ class BaseAgent(ABC):
             'BrandGuardianAgent': 'brandguardian',
             'UxResearcherAgent': 'uxresearcher',
             'VisualStorytellerAgent': 'visualstoryteller',
-            'WhimsyInjectorAgent': 'whimsyinjector'
+            'WhimsyInjectorAgent': 'whimsyinjector',
+            'InstagramCuratorAgent': 'instagramcurator'
         }
         self.agent_type = agent_type_map.get(class_name, class_name.lower().replace('agent', ''))
     

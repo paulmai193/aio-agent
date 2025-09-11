@@ -18,6 +18,7 @@ from .brand_guardian_agent import BrandGuardianAgent
 from .ux_researcher_agent import UxResearcherAgent
 from .visual_storyteller_agent import VisualStorytellerAgent
 from .whimsy_injector_agent import WhimsyInjectorAgent
+from .instagram_curator_agent import InstagramCuratorAgent
 
 __all__ = [
     "BaseAgent", "AiEngineerAgent", "UiDesignerAgent", "ContentCreatorAgent", 
@@ -25,5 +26,5 @@ __all__ = [
     "GrowthHackerAgent", "TrendResearcherAgent", "DevopsAutomatorAgent", 
     "TestWriterFixerAgent", "ProjectShipperAgent", "LanguageDetectorAgent", 
     "BrandGuardianAgent", "UxResearcherAgent", "VisualStorytellerAgent", 
-    "WhimsyInjectorAgent"
+    "WhimsyInjectorAgent", "InstagramCuratorAgent"
 ]

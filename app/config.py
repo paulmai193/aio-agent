@@ -41,6 +41,7 @@ class Settings(BaseSettings):
     MODEL_UXRESEARCHER: str = "llama2"
     MODEL_VISUALSTORYTELLER: str = "mistral"
     MODEL_WHIMSYINJECTOR: str = "mistral"
+    MODEL_INSTAGRAMCURATOR: str = "llama3.2"
     
     # Logging
     LOG_LEVEL: str = "DEBUG"
