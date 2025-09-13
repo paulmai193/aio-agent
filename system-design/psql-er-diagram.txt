@@ -1,0 +1,34 @@
+entity "User" as PgUser {
+  user_id: UUID <<PK>>
+  username: VARCHAR
+  password_hash: VARCHAR
+  email: VARCHAR
+  status: VARCHAR
+  created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+}
+
+entity "Role" as PgRole {
+  role_id: UUID <<PK>>
+  name: VARCHAR
+  description: VARCHAR
+}
+
+entity "User_Role" as PgUserRole {
+  user_id: UUID <<FK>>
+  role_id: UUID <<FK>>
+}
+
+entity "Activity_Log" as PgLog {
+  log_id: UUID <<PK>>
+  user_id: UUID <<FK>>
+  query_text: TEXT
+  answer_text: TEXT
+  timestamp: TIMESTAMP
+  doc_id: VARCHAR
+  status: VARCHAR
+}
+
+PgUser "1" -- "0..*" PgUserRole : assigned >
+PgRole "1" -- "0..*" PgUserRole : mapped >
+PgUser "1" -- "0..*" PgLog : logs >

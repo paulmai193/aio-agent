@@ -1,0 +1,32 @@
+entity "Document" as MongoDocument {
+  _id: ObjectId
+  title: String
+  content: String
+  metadata: Object
+  author: String
+  tags: [String]
+  chunkIds: [String]
+  accessLevel: String
+  createdAt: Date
+  createdBy: String
+  updatedAt: Date
+  updatedBy: String
+}
+
+entity "Chunk" as MongoChunk {
+  _id: ObjectId
+  docId: ObjectId
+  content: String
+  metadata: Object
+  embeddingId: String
+}
+
+entity "UserProfile" as MongoUser {
+  _id: ObjectId
+  username: String
+  name: String
+  email: String
+  roles: [String]
+}
+
+MongoDocument "1" -- "0..*" MongoChunk : contains >

@@ -1,0 +1,17 @@
+entity "Embedding" as VectorEmbedding {
+  embedding_id: String <<PK>>
+  vector: [Float]
+  chunk_id: String
+  metadata: JSON
+  createdAt: Datetime
+}
+
+entity "Chunk" as MongoChunk {
+  _id: ObjectId
+  docId: ObjectId
+  text: String
+  embeddingId: String
+}
+
+
+MongoChunk "1" -- "1" VectorEmbedding : has >

@@ -1,0 +1,52 @@
+@startuml
+|User|
+start
+:Log in via Web UI;
+:Enter question/query;
+
+|Web UI|
+:Receive query;
+:Send query to Spring Boot API;
+
+|Spring Boot API|
+:Authenticate via Spring Security;
+if (Authorized?) then (yes)
+  :Preprocess query (normalize, extract keywords);
+
+  |NLP Microservices|
+  :Generate embedding for query;
+
+  |Qdrant/Weaviate|
+  :Semantic search for relevant documents;
+
+  |MongoDB|
+  :Retrieve document metadata;
+
+  |PostgreSQL|
+  :Check document access permissions;
+
+  |Spring Boot API|
+  if (Docs accessible?) then (yes)
+    |LLM Service|
+    :Summarize and generate answer;
+
+    |Spring Boot API|
+    :Return answer and sources;
+  else (no)
+    |Spring Boot API|
+    :Return "No matching information found";
+  endif
+else (no)
+  |Spring Boot API|
+  :Return "Insufficient permission";
+endif
+
+|PostgreSQL|
+:Async log query & result;
+
+|Web UI|
+:Display response;
+
+|User|
+stop
+@enduml

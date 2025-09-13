@@ -1,0 +1,23 @@
+@startuml
+|Data Connector/Ingestion|
+start
+:Start Data Connector;
+:Connect to data sources\n(Confluence, Email, Repo...);
+:Collect raw data;
+:Temporarily store raw data;
+
+|Preprocessing/NLP|
+:Preprocess data;
+:Clean text, convert formats;
+:Split text into chunks;
+:Extract metadata\n(source, author, date, tags, permissions);
+:Generate embedding for each chunk;
+:Attach embedding to chunk;
+
+|Knowledge Base & Indexing|
+:Store chunk and metadata in MongoDB;
+:Store embedding in Vector DB\n(Qdrant/Weaviate);
+:Index chunk/document into search system\n(metadata, keyword);
+:Update ingest status to successful;
+stop
+@enduml

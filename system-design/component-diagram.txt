@@ -1,0 +1,44 @@
+@startuml
+title AI Agent Knowledge Navigator - Component Diagram (Tech Stack: Java/Spring Boot, ReactJS, NLP Python, Qdrant, MongoDB, PostgreSQL)
+
+package "Frontend" {
+  [ReactJS UI] 
+}
+
+package "Backend Services" {
+  [Spring Boot API] 
+  [Spring Security]
+}
+
+package "Data Storage" {
+  [MongoDB]
+  [PostgreSQL]
+  [Qdrant/Weaviate Vector DB]
+}
+
+package "AI/NLP Services" {
+  [Python NLP Microservice]
+  [LLM Service (OpenAI/Llama.cpp)]
+}
+
+[ReactJS UI] --> [Spring Boot API] : REST API
+[Spring Boot API] ..> [Spring Security] : Auth & Authorization
+
+[Spring Boot API] --> [MongoDB] : Data/metadata CRUD
+[Spring Boot API] --> [PostgreSQL] : User, Log, Role
+[Spring Boot API] --> [Qdrant/Weaviate Vector DB] : Search embedding
+
+[Spring Boot API] --> [Python NLP Microservice] : REST API (embedding, NLP tasks)
+[Python NLP Microservice] --> [Qdrant/Weaviate Vector DB] : Write embedding
+[Spring Boot API] --> [LLM Service (OpenAI/Llama.cpp)] : REST API (Q&A)
+
+note right of [Spring Boot API]
+- Scheduler for data ingestion (Confluence, Email, Repo)
+- Chunking, preprocessing
+end note
+
+note bottom of [Spring Security]
+- OAuth2 / JWT / SSO integration
+end note
+
+@enduml
